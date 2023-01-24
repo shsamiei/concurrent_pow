@@ -1,5 +1,5 @@
 from rest_framework.exceptions import AuthenticationFailed
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView
 
 from .serializers import UrlSerializer
 from .models import Requests, Url
@@ -10,6 +10,15 @@ class CreateUrlAPIView(CreateAPIView):
     serializer_class = UrlSerializer
 
     def get_serializer_context(self):
-        # if self.request.user.is_anonymous :
-        #     raise AuthenticationFailed('your not logged in as user')    
+        if self.request.user.is_anonymous:
+            raise AuthenticationFailed('your not logged in as user')
         return {'user_id': self.request.user.id}
+
+
+class ListUrlAPIView(ListAPIView):
+    serializer_class = UrlSerializer
+
+    def get_queryset(self):
+        user_id = self.request.user.id
+        queryset = Url.objects.filter(user_id=user_id)
+        return queryset

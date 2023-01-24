@@ -10,5 +10,3 @@ class UrlAdmin(admin.ModelAdmin):
 @admin.register(Requests)
 class RequestsAdmin(admin.ModelAdmin):
     list_display = ['created_at', 'deleted_at', 'updated_at', 'result']
-
-
