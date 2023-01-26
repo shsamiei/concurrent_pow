@@ -1,13 +1,12 @@
+import os
 from pathlib import Path
 from datetime import timedelta
+from celery.schedules import crontab
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-SECRET_KEY = 'django-insecure-y8w19n!0v7o5^0y+=+yq-0!xh85*8i8%2mc=p1trj!u)+q^77u'
-
-DEBUG = True
-
-ALLOWED_HOSTS = []
+SECRET_KEY = os.environ.get("SECRET_KEY")
+DEBUG = int(os.environ.get("DEBUG", default=0))
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 
 # Application definition 
@@ -125,4 +124,15 @@ DJOSER = {
     'SERIALIZERS': {
         'user_create': 'core.serializers.UserCreateSerializer'
     }
+}
+
+#celery
+CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_RESULT_BACKEND = "redis://redis:6379"
+
+CELERY_BEAT_SCHEDULE = {
+    "sample_task": {
+        "task": "http-monitor.tasks.sample_task",
+        "schedule": crontab(minute="*/1"),
+    },
 }

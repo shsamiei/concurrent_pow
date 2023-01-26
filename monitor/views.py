@@ -22,3 +22,4 @@ class ListUrlAPIView(ListAPIView):
         user_id = self.request.user.id
         queryset = Url.objects.filter(user_id=user_id)
         return queryset
+             
